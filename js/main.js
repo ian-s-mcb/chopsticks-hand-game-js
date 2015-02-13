@@ -26,6 +26,7 @@ var onHandClick = function() {
 	//		add 'selected' class to caller
 	//		call split callback
 	// else if playerNum == 2
+	//		set amount = value of p1's selected hand
 	//		remove 'selected' class from p1 hands
 	//		call attack callback
 
@@ -43,13 +44,14 @@ var onHandClick = function() {
 	//		add 'selected' class to caller
 	//		call split callback
 	// else if playerNum == 1
+	//		set amount = value of p2's selected hand
 	//		remove 'selected' class from p2 hands
 	//		call attack callback
 };
 
 
 // STATEs 2 + 5
-var split = function(source, destination) {
+var split = function() {
 
 	// if STATE == 2
 	//		display text areas on p1 hands
@@ -58,11 +60,11 @@ var split = function(source, destination) {
 	// 	inside callback:
 	//			if text areas are unchanged
 	//				set STATE = 0
-	//				remove text areas and button
 	//			else
 	//				update p1 hand values
 	//				set STATE = 3
-	//				remove text areas and button
+	//			remove 'selected' class from p1 hands
+	//			remove text areas and button
 
 	// if STATE == 5 
 	//		display text areas on p2 hands
@@ -71,23 +73,23 @@ var split = function(source, destination) {
 	// 	inside callback:
 	//			if text areas are unchanged
 	//				set STATE = 3
-	//				remove text areas and button
 	//			else
 	//				update p2 hand values
 	//				set STATE = 0
-	//				remove text areas and button
+	//			remove 'selected' class from p2 hands
+	//			remove text areas and button
 };
 
 
 var attack = function(amount, target) {
 
-// deduct amount from target hand
+	// deduct amount from target hand's value
 
-// if gameover condition is met
-//		set STATE = 6
-//		display gameover screen
-// else if STATE == 1
-//		set STATE = 3
-// else if STATE == 4
-//		set STATE = 0
+	// if gameover condition is met
+	//		set STATE = 6
+	//		display gameover screen
+	// else if STATE == 1
+	//		set STATE = 3
+	// else if STATE == 4
+	//		set STATE = 0
 };
