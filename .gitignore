@@ -1,0 +1,5 @@
+# vim temporary file
+*.swp
+
+# offline jquery library file
+jquery-*
