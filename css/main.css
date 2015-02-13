@@ -1,0 +1,33 @@
+#game {
+    width: 450px;
+    margin: 15px auto;
+}
+.region {
+    float: left;
+    padding: 0 15% 10%;
+    border: 1px solid;
+}
+.label {
+    padding: 10px 0;
+    margin: 0 0 37px;
+    text-align: center;
+}
+.hand {
+    width: 75px;
+    height: 50px;
+    margin: 0 auto 15px auto;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+.hand:hover {
+	cursor: pointer;
+}
+.selected {
+	background-color: #eee;
+}
+.currentTurn {
+	border: 2px solid;
+}
