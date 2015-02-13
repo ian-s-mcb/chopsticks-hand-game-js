@@ -1,12 +1,23 @@
+// create psuedo-namespace
+var CHOP = {};
+
+
 // no heavy lifting inside this function
 // just function calls
 $(document).ready(function() {
+
+	"use strict";
+
+	// create global variables
+	CHOP.state = 0;
+	CHOP.p1Hands = $(".p1");
+	CHOP.p2Hands = $(".p2");
 
 	console.log("jQuery works");
 });
 
 
-var onHandClick = function() {
+CHOP.onHandClick = function() {
 
 	// identify the caller by:
 	// set playerNum = 1 or 2
@@ -51,7 +62,7 @@ var onHandClick = function() {
 
 
 // STATEs 2 + 5
-var split = function() {
+CHOP.split = function() {
 
 	// if STATE == 2
 	//		display text areas on p1 hands
@@ -81,7 +92,7 @@ var split = function() {
 };
 
 
-var attack = function(amount, target) {
+CHOP.attack = function(amount, target) {
 
 	// deduct amount from target hand's value
 
