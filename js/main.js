@@ -13,6 +13,10 @@ $(document).ready(function() {
 	CHOP.p1Hands = $(".p1");
 	CHOP.p2Hands = $(".p2");
 
+	// adds click listeners to hands
+	CHOP.p1Hands.on("click", CHOP.onHandClick);
+	CHOP.p2Hands.on("click", CHOP.onHandClick);
+
 	console.log("jQuery works");
 });
 
@@ -22,11 +26,24 @@ CHOP.onHandClick = function() {
 	// identify the caller by:
 	// set playerNum = 1 or 2
 	// set isSelected = true or false
+	var caller = $(this);
+	var playerNum = caller.hasClass("p1") ? 1 : 2;
+	var isSelected = caller.hasClass("selected");
+
+	console.log(
+		"clicked player # " + playerNum +
+		". previously " + (isSelected ? "selected" : "unselected")
+	);
 
 	// STATE 0
 	// if playerNum == 1
 	// 	add 'selected' class to caller
 	//    set STATE = 1
+	if (CHOP.state == 0 && playerNum == 1) {
+
+		caller.addClass("selected");
+		CHOP.state = 1;
+	}
 
 	// STATE 1
 	// if playerNum == 1 and isSelected
@@ -40,6 +57,27 @@ CHOP.onHandClick = function() {
 	//		set amount = value of p1's selected hand
 	//		remove 'selected' class from p1 hands
 	//		call attack callback
+	else if (CHOP.state == 1) {
+
+		if (playerNum == 1 && isSelected) {
+
+			caller.removeClass("selected");
+			CHOP.state = 0;
+		}
+		else if (playerNum == 1 && !isSelected) {
+
+			caller.addClass("selected");
+			CHOP.state = 2;
+			CHOP.split();
+		}
+		else if (playerNum == 2) {
+
+			var attackingHand = $(CHOP.p1Hands[0]).hasClass("selected") ? 
+				$(CHOP.p1Hands[0]) : $(CHOP.p1Hands[1]);
+			attackingHand.removeClass("selected");
+			CHOP.attack(attackingHand.html(), caller);
+		}
+	}
 
 	// STATE 3
 	// if playerNum == 2
@@ -63,6 +101,8 @@ CHOP.onHandClick = function() {
 
 // STATEs 2 + 5
 CHOP.split = function() {
+
+	console.log("entering split mode");
 
 	// if STATE == 2
 	//		display text areas on p1 hands
@@ -93,6 +133,9 @@ CHOP.split = function() {
 
 
 CHOP.attack = function(amount, target) {
+
+	console.log("directing an attack of amount " + amount + " to:");
+	console.log(target);
 
 	// deduct amount from target hand's value
 
