@@ -75,7 +75,7 @@ CHOP.onHandClick = function() {
 			var attackingHand = $(CHOP.p1Hands[0]).hasClass("selected") ? 
 				$(CHOP.p1Hands[0]) : $(CHOP.p1Hands[1]);
 			attackingHand.removeClass("selected");
-			CHOP.attack(attackingHand.html(), caller);
+			CHOP.attack(Number(attackingHand.html()), caller);
 		}
 	}
 
@@ -83,6 +83,11 @@ CHOP.onHandClick = function() {
 	// if playerNum == 2
 	// 	add 'selected' class to caller
 	//    set STATE = 4
+	else if (CHOP.state == 3 && playerNum == 2) {
+
+		caller.addClass("selected");
+		CHOP.state = 4;
+	}
 
 	// STATE 4
 	// if playerNum == 2 and isSelected
@@ -96,6 +101,27 @@ CHOP.onHandClick = function() {
 	//		set amount = value of p2's selected hand
 	//		remove 'selected' class from p2 hands
 	//		call attack callback
+	else if (CHOP.state == 4) {
+
+		if (playerNum == 2 && isSelected) {	
+
+			caller.removeClass("selected");
+			CHOP.state = 3;
+		}
+		else if (playerNum == 2 && !isSelected) {
+
+			caller.addClass("selected");
+			CHOP.state = 5;
+			CHOP.split();
+		}
+		else if (playerNum == 1) {
+
+			var attackingHand = $(CHOP.p2Hands[0]).hasClass("selected") ? 
+				$(CHOP.p2Hands[0]) : $(CHOP.p2Hands[1]);
+			attackingHand.removeClass("selected");
+			CHOP.attack(Number(attackingHand.html()), caller);
+		}
+	}
 };
 
 
@@ -136,9 +162,16 @@ CHOP.attack = function(amount, target) {
 
 	console.log("directing an attack of amount " + amount + " to:");
 	console.log(target);
+	
+	var targetValue = Number(target.html());
 
 	// deduct amount from target hand's value
-
+	if (targetValue + amount > 4) { 
+		console.log(targetValue + amount);
+		target.html(0);
+	}
+	else { target.html(targetValue + amount); }
+	
 	// if gameover condition is met
 	//		set STATE = 6
 	//		display gameover screen
@@ -146,4 +179,16 @@ CHOP.attack = function(amount, target) {
 	//		set STATE = 3
 	// else if STATE == 4
 	//		set STATE = 0
+	if (CHOP.state == 1) {
+		if ($(CHOP.p2Hands[0]).html() == 0 && $(CHOP.p2Hands[1]).html() == 0) {
+			console.log("Game Over p1 wins");
+		}
+		else { CHOP.state = 3; }
+	}
+	else if (CHOP.state == 4) {
+		if ($(CHOP.p1Hands[0]).html() == 0 && $(CHOP.p1Hands[1]).html() == 0) {
+			console.log("Game Over p2 wins");
+		}
+		else { CHOP.state = 0; }
+	}
 };
