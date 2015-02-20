@@ -83,6 +83,11 @@ CHOP.onHandClick = function() {
 	// if playerNum == 2
 	// 	add 'selected' class to caller
 	//    set STATE = 4
+	if (CHOP.state == 3 && playerNum == 2) {
+
+		caller.addClass("selected");
+		CHOP.state = 4;
+	}
 
 	// STATE 4
 	// if playerNum == 2 and isSelected
@@ -96,6 +101,27 @@ CHOP.onHandClick = function() {
 	//		set amount = value of p2's selected hand
 	//		remove 'selected' class from p2 hands
 	//		call attack callback
+	else if (CHOP.state == 4) {
+
+		if (playerNum == 2 && isSelected) {	
+
+			caller.removeClass("selected");
+			CHOP.state = 3;
+		}
+		else if (playerNum == 2 && !isSelected) {
+
+			caller.addClass("selected");
+			CHOP.state = 5;
+			CHOP.split();
+		}
+		else if (playerNum == 1) {
+
+			var attackingHand = $(CHOP.p2Hands[0]).hasClass("selected") ? 
+				$(CHOP.p2Hands[0]) : $(CHOP.p2Hands[1]);
+			attackingHand.removeClass("selected");
+			CHOP.attack(attackingHand.html(), caller);
+		}
+	}
 };
 
 
