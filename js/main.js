@@ -182,12 +182,14 @@ CHOP.attack = function(amount, target) {
 	if (CHOP.state == 1) {
 		if ($(CHOP.p2Hands[0]).html() == 0 && $(CHOP.p2Hands[1]).html() == 0) {
 			console.log("Game Over p1 wins");
+			CHOP.state = 6;
 		}
 		else { CHOP.state = 3; }
 	}
 	else if (CHOP.state == 4) {
 		if ($(CHOP.p1Hands[0]).html() == 0 && $(CHOP.p1Hands[1]).html() == 0) {
 			console.log("Game Over p2 wins");
+			CHOP.state = 6;
 		}
 		else { CHOP.state = 0; }
 	}
