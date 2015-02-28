@@ -74,8 +74,13 @@ CHOP.onHandClick = function() {
 
 			var attackingHand = $(CHOP.p1Hands[0]).hasClass("selected") ? 
 				$(CHOP.p1Hands[0]) : $(CHOP.p1Hands[1]);
-			attackingHand.removeClass("selected");
-			CHOP.attack(Number(attackingHand.html()), caller);
+			var attackAmount = Number(attackingHand.html());
+
+			if (attackAmount != 0) {
+
+				attackingHand.removeClass("selected");
+				CHOP.attack(attackAmount, caller);
+			}
 		}
 	}
 
@@ -118,8 +123,13 @@ CHOP.onHandClick = function() {
 
 			var attackingHand = $(CHOP.p2Hands[0]).hasClass("selected") ? 
 				$(CHOP.p2Hands[0]) : $(CHOP.p2Hands[1]);
-			attackingHand.removeClass("selected");
-			CHOP.attack(Number(attackingHand.html()), caller);
+			var attackAmount = Number(attackingHand.html());
+
+			if (attackAmount != 0) {
+
+				attackingHand.removeClass("selected");
+				CHOP.attack(attackAmount, caller);
+			}
 		}
 	}
 };
