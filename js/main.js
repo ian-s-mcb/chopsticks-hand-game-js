@@ -12,10 +12,15 @@ $(document).ready(function() {
 	CHOP.state = 0;
 	CHOP.p1Hands = $(".p1");
 	CHOP.p2Hands = $(".p2");
+	CHOP.p1Region = $($(".region")[0]);
+	CHOP.p2Region = $($(".region")[1]);
 
 	// adds click listeners to hands
 	CHOP.p1Hands.on("click", CHOP.onHandClick);
 	CHOP.p2Hands.on("click", CHOP.onHandClick);
+
+	// indicates player-1's turn
+	CHOP.p1Region.addClass("currentTurn");
 
 	console.log("jQuery works");
 });
@@ -80,7 +85,9 @@ CHOP.onHandClick = function() {
 
 				attackingHand.removeClass("selected");
 				CHOP.attack(attackAmount, caller);
+				CHOP.switchTurnIndicator();
 			}
+
 		}
 	}
 
@@ -129,9 +136,18 @@ CHOP.onHandClick = function() {
 
 				attackingHand.removeClass("selected");
 				CHOP.attack(attackAmount, caller);
+				CHOP.switchTurnIndicator();
 			}
 		}
 	}
+};
+
+
+// Switches style of `region` elements to indicate which whose turn it is
+CHOP.switchTurnIndicator = function() {
+
+	CHOP.p1Region.toggleClass("currentTurn");
+	CHOP.p2Region.toggleClass("currentTurn");
 };
 
 
@@ -150,6 +166,7 @@ CHOP.split = function() {
 	//			else
 	//				update p1 hand values
 	//				set STATE = 3
+	//				call switchTurnIndicator
 	//			remove 'selected' class from p1 hands
 	//			remove text areas and button
 
@@ -163,6 +180,7 @@ CHOP.split = function() {
 	//			else
 	//				update p2 hand values
 	//				set STATE = 0
+	//				call switchTurnIndicator
 	//			remove 'selected' class from p2 hands
 	//			remove text areas and button
 };
