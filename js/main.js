@@ -1,14 +1,15 @@
-// create psuedo-namespace
+// creates psuedo-namespace
 var CHOP = {};
 
 
+// starts game
 // no heavy lifting inside this function
 // just function calls
 $(document).ready(function() {
 
 	"use strict";
 
-	// create global variables
+	// creates global variables
 	CHOP.state = 0;
 	CHOP.p1Hands = $(".p1");
 	CHOP.p2Hands = $(".p2");
@@ -143,7 +144,7 @@ CHOP.onHandClick = function() {
 };
 
 
-// Switches style of `region` elements to indicate which whose turn it is
+// switches style of `region` elements to indicate which whose turn it is
 CHOP.switchTurnIndicator = function() {
 
 	CHOP.p1Region.toggleClass("currentTurn");
@@ -193,7 +194,7 @@ CHOP.attack = function(amount, target) {
 	
 	var targetValue = Number(target.html());
 
-	// deduct amount from target hand's value
+	// deducts amount from target hand's value
 	if (targetValue + amount > 4) { 
 		console.log(targetValue + amount);
 		target.html(0);
