@@ -2,9 +2,13 @@
 var CHOP = {};
 
 
-// starts game
-// no heavy lifting inside this function
-// just function calls
+//###################
+//#   ENTRY POINT   #
+//###################
+/**
+ * Sets global variables, adds click listener to hands, and starts game
+ * off with player-1's turn.
+*/
 $(document).ready(function() {
 
 	"use strict";
@@ -33,6 +37,14 @@ $(document).ready(function() {
 });
 
 
+//###################
+//#   onHandClick   #
+//###################
+/**
+ * Applies game behavior depending upon game state and click info. Gets
+ * called by whenever the user clicks a hand.
+ *
+*/
 CHOP.onHandClick = function() {
 
 	// identify the caller by:
@@ -48,28 +60,14 @@ CHOP.onHandClick = function() {
 		"\nThis hand was previously " + (isSelected ? "selected" : "unselected")
 		);
 
-	// STATE 0
-	// if playerNum == 1
-	// 	add 'selected' class to caller
-	//    set STATE = 1
+	// ### STATE 0 ###
 	if (CHOP.state == 0 && playerNum == 1) {
 
 		caller.addClass("selected");
 		CHOP.state = 1;
 	}
 
-	// STATE 1
-	// if playerNum == 1 and isSelected
-	//		remove 'selected' class from caller
-	//		set STATE = 0
-	// else if playerNum == 1 and !isSelected
-	//		set STATE = 2
-	//		add 'selected' class to caller
-	//		call split callback
-	// else if playerNum == 2
-	//		set amount = value of p1's selected hand
-	//		remove 'selected' class from p1 hands
-	//		call attack callback
+	// ### STATE 1 ###
 	else if (CHOP.state == 1) {
 
 		if (playerNum == 1 && isSelected) {
@@ -99,28 +97,14 @@ CHOP.onHandClick = function() {
 		}
 	}
 
-	// STATE 3
-	// if playerNum == 2
-	// 	add 'selected' class to caller
-	//    set STATE = 4
+	// ### STATE 3 ###
 	else if (CHOP.state == 3 && playerNum == 2) {
 
 		caller.addClass("selected");
 		CHOP.state = 4;
 	}
 
-	// STATE 4
-	// if playerNum == 2 and isSelected
-	//		remove 'selected' class from caller
-	//		set STATE = 3
-	// else if playerNum == 2 and !isSelected
-	//		set STATE = 5
-	//		add 'selected' class to caller
-	//		call split callback
-	// else if playerNum == 1
-	//		set amount = value of p2's selected hand
-	//		remove 'selected' class from p2 hands
-	//		call attack callback
+	// ### STATE 4 ###
 	else if (CHOP.state == 4) {
 
 		if (playerNum == 2 && isSelected) {	
@@ -153,7 +137,12 @@ CHOP.onHandClick = function() {
 };
 
 
-// switches style of `region` elements to indicate which whose turn it is
+//############################
+//#   switchTurnIndictator   #
+//############################
+/**
+ * Switches style of `region` elements to indicate which whose turn it is. 
+*/
 CHOP.switchTurnIndicator = function() {
 
 	CHOP.p1Region.toggleClass("currentTurn");
@@ -161,47 +150,27 @@ CHOP.switchTurnIndicator = function() {
 };
 
 
-// STATEs 2 + 5
+//####################
+//#   prepareSplit   #
+//####################
+/**
+ * Displays split mode elements (text boxes and apply split button) and
+ * passes split mode info to the applySplit method.
+*/
 CHOP.prepareSplit = function() {
 
 	console.log("Entering split mode");
 
-	// if STATE == 2
-	//		display text areas on p1 hands
-	//		display apply button below p1 hands
-	// 	add anonymouse callback to apply button
-	// 	inside callback:
-	//			if text areas are unchanged
-	//				set STATE = 0
-	//			else
-	//				update p1 hand values
-	//				set STATE = 3
-	//				call switchTurnIndicator
-	//			remove 'selected' class from p1 hands
-	//			remove text areas and button
-
-	// if STATE == 5 
-	//		display text areas on p2 hands
-	//		display apply button below p2 hands
-	// 	add anonymouse callback to apply button
-	// 	inside callback:
-	//			if text areas are unchanged
-	//				set STATE = 3
-	//			else
-	//				update p2 hand values
-	//				set STATE = 0
-	//				call switchTurnIndicator
-	//			remove 'selected' class from p2 hands
-	//			remove text areas and button
-
 	// prepares variables so that this function is "player agnostic"
 	var handTop, handBottom, button;
+	// ### STATE 2 ###
 	if (CHOP.state == 2) {
 
 		handTop = CHOP.p1HandTop;
 		handBottom = CHOP.p1HandBottom;
 		button = $(".p1 .split-btn");
 	}
+	// ### STATE 5 ###
 	else if (CHOP.state == 5) {
 
 		handTop = CHOP.p2HandTop;
@@ -233,6 +202,14 @@ CHOP.prepareSplit = function() {
 };
 
 
+//##################
+//#   applySplit   #
+//##################
+/**
+ * If the user-specified split is legal, then the new points are applied
+ * to the user's hand and split mode is exited. If not, the user's turn is
+ * restarted.
+*/
 CHOP.applySplit = function(handTop, handBottom, ptsOrig, button) {
 
 	// backs up new points
@@ -278,19 +255,15 @@ CHOP.applySplit = function(handTop, handBottom, ptsOrig, button) {
 };
 
 
-/*
-Returns true if
-	- points are changed, and
-	- point change is fair, and
-	- new points are non-negative
-Otherwise returns false.
-
-Initial tests:
-CHOP.isLegalSplit([1,1], [1,1]); # false
-CHOP.isLegalSplit([1,1], [1,3]); # false
-CHOP.isLegalSplit([1,1], [3,1]); # false
-CHOP.isLegalSplit([1,1], [-1,3]); # false
-CHOP.isLegalSplit([1,1], [0,2]); # true
+//####################
+//#   isLegalSplit   #
+//####################
+/**
+ * Checks the legality of a given split, and returns true if:
+ *		- points are changed, and
+ *		- point change is fair, and
+ *		- new points are non-negative,
+ * otherwise returns false.
 */
 CHOP.isLegalSplit = function(ptsOrig, ptsNew) {
 
@@ -302,6 +275,13 @@ CHOP.isLegalSplit = function(ptsOrig, ptsNew) {
 };
 
 
+//##############
+//#   attack   #
+//##############
+/**
+ * Deals an amount of damage to a target hand and changes game state,
+ * depending upon game over condition.
+*/
 CHOP.attack = function(amount, target) {
 	
 	console.log("Attacked '"+ target.attr("class") + "' with " + amount + " points");
@@ -313,14 +293,9 @@ CHOP.attack = function(amount, target) {
 		target.html(0);
 	}
 	else { target.html(targetValue + amount); }
-	
-	// if gameover condition is met
-	//		set STATE = 6
-	//		display gameover screen
-	// else if STATE == 1
-	//		set STATE = 3
-	// else if STATE == 4
-	//		set STATE = 0
+
+	// changes state depending upon whether game over occured
+	// ### STATE 1 ###
 	if (CHOP.state == 1) {
 		if ($(CHOP.p2Hands[0]).html() == 0 && $(CHOP.p2Hands[1]).html() == 0) {
 			console.log("Game Over p1 wins");
@@ -328,6 +303,7 @@ CHOP.attack = function(amount, target) {
 		}
 		else { CHOP.state = 3; }
 	}
+	// ### STATE 4 ###
 	else if (CHOP.state == 4) {
 		if ($(CHOP.p1Hands[0]).html() == 0 && $(CHOP.p1Hands[1]).html() == 0) {
 			console.log("Game Over p2 wins");
