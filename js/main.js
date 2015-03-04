@@ -11,10 +11,16 @@ $(document).ready(function() {
 
 	// creates global variables
 	CHOP.state = 0;
-	CHOP.p1Hands = $(".p1");
-	CHOP.p2Hands = $(".p2");
-	CHOP.p1Region = $($(".region")[0]);
-	CHOP.p2Region = $($(".region")[1]);
+
+	CHOP.p1Region = $(".region.p1");
+	CHOP.p1Hands = $(".hand.p1");
+	CHOP.p1HandTop = $(".p1.top");
+	CHOP.p1HandBottom = $(".p1.bottom");
+
+	CHOP.p2Region = $(".region.p2");
+	CHOP.p2Hands = $(".hand.p2");
+	CHOP.p2HandTop = $(".p2.top");
+	CHOP.p2HandBottom = $(".p2.bottom");
 
 	// adds click listeners to hands
 	CHOP.p1Hands.on("click", CHOP.onHandClick);
@@ -37,9 +43,10 @@ CHOP.onHandClick = function() {
 	var isSelected = caller.hasClass("selected");
 
 	console.log(
-		"clicked player # " + playerNum +
-		". previously " + (isSelected ? "selected" : "unselected")
-	);
+		"Current state: " + CHOP.state +
+		"\nClicked hand belonging to player #: " + playerNum +
+		"\nThis hand was previously " + (isSelected ? "selected" : "unselected")
+		);
 
 	// STATE 0
 	// if playerNum == 1
@@ -78,8 +85,8 @@ CHOP.onHandClick = function() {
 		}
 		else if (playerNum == 2) {
 
-			var attackingHand = $(CHOP.p1Hands[0]).hasClass("selected") ? 
-				$(CHOP.p1Hands[0]) : $(CHOP.p1Hands[1]);
+			var attackingHand = CHOP.p1HandTop.hasClass("selected") ?
+				CHOP.p1HandTop : CHOP.p1HandBottom;
 			var attackAmount = Number(attackingHand.html());
 
 			if (attackAmount != 0) {
@@ -129,8 +136,8 @@ CHOP.onHandClick = function() {
 		}
 		else if (playerNum == 1) {
 
-			var attackingHand = $(CHOP.p2Hands[0]).hasClass("selected") ? 
-				$(CHOP.p2Hands[0]) : $(CHOP.p2Hands[1]);
+			var attackingHand = CHOP.p2HandTop.hasClass("selected") ?
+				CHOP.p2HandTop : CHOP.p2HandBottom;
 			var attackAmount = Number(attackingHand.html());
 
 			if (attackAmount != 0) {
@@ -141,6 +148,8 @@ CHOP.onHandClick = function() {
 			}
 		}
 	}
+
+	console.log("Changed state to: " + CHOP.state);
 };
 
 
@@ -155,7 +164,7 @@ CHOP.switchTurnIndicator = function() {
 // STATEs 2 + 5
 CHOP.split = function() {
 
-	console.log("entering split mode");
+	console.log("Preparing split mode");
 
 	// if STATE == 2
 	//		display text areas on p1 hands
@@ -188,15 +197,13 @@ CHOP.split = function() {
 
 
 CHOP.attack = function(amount, target) {
-
-	console.log("directing an attack of amount " + amount + " to:");
-	console.log(target);
+	
+	console.log("Attacked '"+ target.attr("class") + "' with " + amount + " points");
 	
 	var targetValue = Number(target.html());
 
 	// deducts amount from target hand's value
 	if (targetValue + amount > 4) { 
-		console.log(targetValue + amount);
 		target.html(0);
 	}
 	else { target.html(targetValue + amount); }
