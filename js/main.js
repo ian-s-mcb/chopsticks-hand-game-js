@@ -81,7 +81,7 @@ CHOP.onHandClick = function() {
 
 			caller.addClass("selected");
 			CHOP.state = 2;
-			CHOP.split();
+			CHOP.prepareSplit();
 		}
 		else if (playerNum == 2) {
 
@@ -132,7 +132,7 @@ CHOP.onHandClick = function() {
 
 			caller.addClass("selected");
 			CHOP.state = 5;
-			CHOP.split();
+			CHOP.prepareSplit();
 		}
 		else if (playerNum == 1) {
 
@@ -162,7 +162,7 @@ CHOP.switchTurnIndicator = function() {
 
 
 // STATEs 2 + 5
-CHOP.split = function() {
+CHOP.prepareSplit = function() {
 
 	console.log("Entering split mode");
 
@@ -211,7 +211,10 @@ CHOP.split = function() {
 	else { console.log("Error in split mode"); }
 
 	// backs up original points
-	var ptsOrig = [handTop.html(), handBottom.html()];
+	var ptsOrig = [
+		Number(handTop.html()),
+		Number(handBottom.html())
+	];
 
 	// displays text areas to allow point adjustment
 	handTop.html(
@@ -222,35 +225,80 @@ CHOP.split = function() {
 		ptsOrig[1] + "'>");
 
 	// configures apply button
-	button.css("display", "block");
-	button.on("click", function() {
+	button
+		.css("display", "block")
+		.on("click", function() {
+			CHOP.applySplit(handTop, handBottom, ptsOrig, $(this));
+	});
+};
 
-		// backs up new points
-		var ptsNew = [
-			$("#split-area-top").val(),
-			$("#split-area-bottom").val()
-		];
 
-		// TODO check to see if points have changed
+CHOP.applySplit = function(handTop, handBottom, ptsOrig, button) {
 
-		// TODO check to see if point change is legal
+	// backs up new points
+	var ptsNew = [
+		Number($("#split-area-top").val()),
+		Number($("#split-area-bottom").val())
+	];
+
+	// if split is legal
+	if (CHOP.isLegalSplit(ptsOrig, ptsNew)) {
 
 		// applies new points
 		handTop.html(ptsNew[0]);
 		handBottom.html(ptsNew[1]);
 
-		// exits split mode
-		$(this).css("display", "none");
-		CHOP.p1Hands.removeClass("selected");
-		CHOP.p2Hands.removeClass("selected");
+		// switches turn
 		CHOP.state = CHOP.state == 2 ? 3 : 0;
 		CHOP.switchTurnIndicator();
+	}
 
-		console.log(
-			"Exiting split mode" +
-			"\nChanged state to: " + CHOP.state
-		);
-	});
+	// otherwise, restarts turn
+	else {
+
+		// restores original points
+		handTop.html(ptsOrig[0]);
+		handBottom.html(ptsOrig[1]);
+
+		// retains turn
+		CHOP.state = CHOP.state == 2 ? 0 : 3;
+	}
+
+	// exits split mode
+	button
+		.css("display", "none")
+		.off();
+	CHOP.p1Hands.removeClass("selected");
+	CHOP.p2Hands.removeClass("selected");
+
+	console.log(
+		"Exiting split mode" +
+		"\nChanged state to: " + CHOP.state
+	);
+};
+
+
+/*
+Returns true if
+	- points are changed, and
+	- point change is fair, and
+	- new points are non-negative
+Otherwise returns false.
+
+Initial tests:
+CHOP.isLegalSplit([1,1], [1,1]); # false
+CHOP.isLegalSplit([1,1], [1,3]); # false
+CHOP.isLegalSplit([1,1], [3,1]); # false
+CHOP.isLegalSplit([1,1], [-1,3]); # false
+CHOP.isLegalSplit([1,1], [0,2]); # true
+*/
+CHOP.isLegalSplit = function(ptsOrig, ptsNew) {
+
+	var changed = (ptsOrig[0] != ptsNew[0]) && (ptsOrig[1] != ptsNew[1]);
+	var fair = (ptsOrig[0] - ptsNew[0]) == -1 * (ptsOrig[1] - ptsNew[1]);
+	var nonNeg = (ptsNew[0] >= 0) && (ptsNew[1] >= 0);
+
+	return changed && fair && nonNeg;
 };
 
 
