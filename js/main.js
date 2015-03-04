@@ -164,7 +164,7 @@ CHOP.switchTurnIndicator = function() {
 // STATEs 2 + 5
 CHOP.split = function() {
 
-	console.log("Preparing split mode");
+	console.log("Entering split mode");
 
 	// if STATE == 2
 	//		display text areas on p1 hands
@@ -193,6 +193,64 @@ CHOP.split = function() {
 	//				call switchTurnIndicator
 	//			remove 'selected' class from p2 hands
 	//			remove text areas and button
+
+	// prepares variables so that this function is "player agnostic"
+	var handTop, handBottom, button;
+	if (CHOP.state == 2) {
+
+		handTop = CHOP.p1HandTop;
+		handBottom = CHOP.p1HandBottom;
+		button = $(".p1 .split-btn");
+	}
+	else if (CHOP.state == 5) {
+
+		handTop = CHOP.p2HandTop;
+		handBottom = CHOP.p2HandBottom;
+		button = $(".p2 .split-btn");
+	}
+	else { console.log("Error in split mode"); }
+
+	// backs up original points
+	var ptsOrig = [handTop.html(), handBottom.html()];
+
+	// displays text areas to allow point adjustment
+	handTop.html(
+		"<input id='split-area-top' type='text' size=1 value='" +
+		ptsOrig[0] + "'>");
+	handBottom.html(
+		"<input id='split-area-bottom' type='text' size=1 value='" +
+		ptsOrig[1] + "'>");
+
+	// configures apply button
+	button.css("display", "block");
+	button.on("click", function() {
+
+		// backs up new points
+		var ptsNew = [
+			$("#split-area-top").val(),
+			$("#split-area-bottom").val()
+		];
+
+		// TODO check to see if points have changed
+
+		// TODO check to see if point change is legal
+
+		// applies new points
+		handTop.html(ptsNew[0]);
+		handBottom.html(ptsNew[1]);
+
+		// exits split mode
+		$(this).css("display", "none");
+		CHOP.p1Hands.removeClass("selected");
+		CHOP.p2Hands.removeClass("selected");
+		CHOP.state = CHOP.state == 2 ? 3 : 0;
+		CHOP.switchTurnIndicator();
+
+		console.log(
+			"Exiting split mode" +
+			"\nChanged state to: " + CHOP.state
+		);
+	});
 };
 
 

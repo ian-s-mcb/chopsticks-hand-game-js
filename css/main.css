@@ -4,7 +4,7 @@
 }
 .region {
     float: left;
-    padding: 0 15% 10%;
+    padding: 0 10% 10%;
     border: 1px solid;
 }
 .label {
@@ -30,4 +30,12 @@
 }
 .currentTurn {
 	border: 2px solid;
+}
+.split-container {
+	height: 0px;
+}
+.split-btn {
+	display: none;
+	margin: 0 auto;
+	width: 75px;
 }
