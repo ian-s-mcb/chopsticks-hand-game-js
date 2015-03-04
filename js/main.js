@@ -93,7 +93,6 @@ CHOP.onHandClick = function() {
 				CHOP.attack(attackAmount, caller);
 				CHOP.switchTurnIndicator();
 			}
-
 		}
 	}
 
@@ -284,20 +283,22 @@ CHOP.isLegalSplit = function(ptsOrig, ptsNew) {
 */
 CHOP.attack = function(amount, target) {
 	
-	console.log("Attacked '"+ target.attr("class") + "' with " + amount + " points");
+	console.log("Attacked '"+ target.attr("class") + "' with " + amount +
+		" points"
+	);
 	
 	var targetValue = Number(target.html());
 
 	// deducts amount from target hand's value
-	if (targetValue + amount > 4) { 
+	if (targetValue + amount > 4)
 		target.html(0);
-	}
-	else { target.html(targetValue + amount); }
+	else
+		target.html(targetValue + amount);
 
 	// changes state depending upon whether game over occured
 	// ### STATE 1 ###
 	if (CHOP.state == 1) {
-		if ($(CHOP.p2Hands[0]).html() == 0 && $(CHOP.p2Hands[1]).html() == 0) {
+		if (CHOP.p2HandTop.html() == 0 && CHOP.p2HandBottom.html() == 0) {
 			console.log("Game Over p1 wins");
 			CHOP.state = 6;
 		}
@@ -305,7 +306,7 @@ CHOP.attack = function(amount, target) {
 	}
 	// ### STATE 4 ###
 	else if (CHOP.state == 4) {
-		if ($(CHOP.p1Hands[0]).html() == 0 && $(CHOP.p1Hands[1]).html() == 0) {
+		if (CHOP.p1HandTop.html() == 0 && CHOP.p1HandBottom.html() == 0) {
 			console.log("Game Over p2 wins");
 			CHOP.state = 6;
 		}
