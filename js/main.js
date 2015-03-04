@@ -87,7 +87,7 @@ CHOP.onHandClick = function() {
 				CHOP.p1HandTop : CHOP.p1HandBottom;
 			var attackAmount = Number(attackingHand.html());
 
-			if (attackAmount != 0) {
+			if ((attackAmount != 0) && (caller.html() != 0)) {
 
 				attackingHand.removeClass("selected");
 				CHOP.attack(attackAmount, caller);
@@ -123,7 +123,7 @@ CHOP.onHandClick = function() {
 				CHOP.p2HandTop : CHOP.p2HandBottom;
 			var attackAmount = Number(attackingHand.html());
 
-			if (attackAmount != 0) {
+			if ((attackAmount != 0) && (caller.html() != 0)) {
 
 				attackingHand.removeClass("selected");
 				CHOP.attack(attackAmount, caller);
