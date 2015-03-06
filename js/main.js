@@ -14,6 +14,7 @@ $(document).ready(function() {
 	"use strict";
 
 	// creates global variables
+	CHOP.game = $(".game");
 	CHOP.state = 0;
 
 	CHOP.p1Region = $(".region.p1");
@@ -298,18 +299,45 @@ CHOP.attack = function(amount, target) {
 	// changes state depending upon whether game over occured
 	// ### STATE 1 ###
 	if (CHOP.state == 1) {
+
 		if (CHOP.p2HandTop.html() == 0 && CHOP.p2HandBottom.html() == 0) {
+
 			console.log("Game Over p1 wins");
+
+			// apply game over screen after a brief delay
+			window.setTimeout(function() { CHOP.gameOver(1); }, 500);
+
 			CHOP.state = 6;
 		}
 		else { CHOP.state = 3; }
 	}
 	// ### STATE 4 ###
 	else if (CHOP.state == 4) {
+
 		if (CHOP.p1HandTop.html() == 0 && CHOP.p1HandBottom.html() == 0) {
+
 			console.log("Game Over p2 wins");
+
+			// apply game over screen after a brief delay
+			window.setTimeout(function() { CHOP.gameOver(2); }, 500);
+
 			CHOP.state = 6;
 		}
 		else { CHOP.state = 0; }
 	}
+};
+
+
+//################
+//#   gameOver   #
+//################
+/**
+ * Replaces the normal game screen with a game over message, depending
+ * upon which player won
+*/
+CHOP.gameOver = function(playerNumber) {
+
+	CHOP.game
+		.html("Game Over</br>Player " + playerNumber + " Wins")
+		.addClass("gameOver");
 };
