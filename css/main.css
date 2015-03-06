@@ -1,26 +1,25 @@
 #game {
-    width: 450px;
-    margin: 15px auto;
+	width: 450px;
+	margin: 15px auto;
 }
 .region {
-    float: left;
-    padding: 0 10% 10%;
-    border: 1px solid;
+	width: 50%;
+	float: left;
 }
 .label {
-    padding: 10px 0;
-    margin: 0 0 37px;
-    text-align: center;
+	padding: 10px 0;
+	margin: 0 0 37px;
+	text-align: center;
 }
 .hand {
-    width: 75px;
-    height: 50px;
-    margin: 0 auto 15px auto;
-    font-size: 20px;
-    line-height: 50px;
-    text-align: center;
-    border: 1px solid #000;
-    border-radius: 10px;
+	width: 75px;
+	height: 50px;
+	margin: 0 auto 15px auto;
+	font-size: 20px;
+	line-height: 50px;
+	text-align: center;
+	border: 1px solid #000;
+	border-radius: 10px;
 }
 .hand:hover {
 	cursor: pointer;
@@ -29,10 +28,10 @@
 	background-color: #eee;
 }
 .currentTurn {
-	border: 2px solid;
+	outline: 2px solid;
 }
 .split-container {
-	height: 0px;
+	height: 60px;
 }
 .split-btn {
 	display: none;
