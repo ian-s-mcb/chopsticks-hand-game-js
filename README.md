@@ -18,6 +18,6 @@ Still not clear? Check out [this wikipedia article][wiki game] for a full explan
 * [Ian S. McBride][gh ian]
 
 [wiki game]: http://en.wikipedia.org/wiki/Chopsticks_%28hand_game%29
-[state diagram]: http://s6.postimg.org/rz8iqi4eo/chopsticks_state_diagram_2014_12_12.jpg
+[state diagram]: http://s6.postimg.org/p55dd228f/chopsticks_state_diagram_2014_12_12.jpg
 [gh enan]: https://github.com/enan789
 [gh ian]: https://github.com/ian-s-mcb
