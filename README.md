@@ -10,6 +10,9 @@ During a turn, a player can either **attack** or **split**. Attacking adds the a
 
 Still not clear? Check out [this wikipedia article][wiki game] for a full explanation of the game.
 
+## Installation
+Clone this repo, go to this [url][game media], and download zip file inside. Place the zip file within repo and extract the files. Finally, open index.html in browser. (No web sever is needed to the play game.)
+
 ## Development Notes
 [This sketch][state diagram] shows the state machine that we used to handle our game logic.
 
@@ -21,3 +24,4 @@ Still not clear? Check out [this wikipedia article][wiki game] for a full explan
 [state diagram]: http://s6.postimg.org/p55dd228f/chopsticks_state_diagram_2014_12_12.jpg
 [gh enan]: https://github.com/enan789
 [gh ian]: https://github.com/ian-s-mcb
+[game media]:https://drive.google.com/open?id=0BwomLAlOEfXYfkhMb3FPa1VXZ3JValdPY0p0eUVuS3lPZDAtSWI3SXlVUnoyb20xaE15N0U&authuser=0
