@@ -13,7 +13,7 @@
 }
 .hand {
 	display: block;
-	margin: 0 auto 15px auto;
+	margin: 0 auto;
 	text-align: center;
 	border: 1px solid transparent;
 }
@@ -29,11 +29,15 @@
 }
 .split-container {
 	height: 60px;
+	line-height: 60px;
+	text-align: center;
 }
 .split-btn {
 	display: none;
 	margin: 0 auto;
 	width: 75px;
+	height: 40px;
+	font-size: 18px;
 }
 .gameOver {
 	margin: 75px auto;
