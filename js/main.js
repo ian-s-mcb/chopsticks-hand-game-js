@@ -22,10 +22,20 @@ $(document).ready(function() {
 	CHOP.p1HandTop = $(".p1.top");
 	CHOP.p1HandBottom = $(".p1.bottom");
 
+	CHOP.p1UpBtn = $(".split-btn.p1.up");
+	CHOP.p1DownBtn = $(".split-btn.p1.down");
+	CHOP.p1ApplyBtn = $(".split-btn.p1.apply");
+	CHOP.p1CancelBtn = $(".split-btn.p1.cancel");
+
 	CHOP.p2Region = $(".region.p2");
 	CHOP.p2Hands = $(".hand.p2");
 	CHOP.p2HandTop = $(".p2.top");
 	CHOP.p2HandBottom = $(".p2.bottom");
+
+	CHOP.p2UpBtn = $(".split-btn.p2.up");
+	CHOP.p2DownBtn = $(".split-btn.p2.down");
+	CHOP.p2ApplyBtn = $(".split-btn.p2.apply");
+	CHOP.p2CancelBtn = $(".split-btn.p2.cancel");
 
 	// adds click listeners to hands
 	CHOP.p1Hands.on("click", CHOP.onHandClick);
@@ -162,20 +172,26 @@ CHOP.prepareSplit = function() {
 	console.log("Entering split mode");
 
 	// prepares variables so that this function is "player agnostic"
-	var handTop, handBottom, button;
+	var handTop, handBottom, upBtn, downBtn, applyBtn, cancelBtn;
 	// ### STATE 2 ###
 	if (CHOP.state == 2) {
 
 		handTop = CHOP.p1HandTop;
 		handBottom = CHOP.p1HandBottom;
-		button = $(".p1 .split-btn");
+		upBtn = CHOP.p1UpBtn;
+		downBtn = CHOP.p1DownBtn;
+		applyBtn = CHOP.p1ApplyBtn;
+		cancelBtn = CHOP.p1CancelBtn;
 	}
 	// ### STATE 5 ###
 	else if (CHOP.state == 5) {
 
-		handTop = CHOP.p2HandTop;
-		handBottom = CHOP.p2HandBottom;
-		button = $(".p2 .split-btn");
+		handTop = CHOP.p1HandTop;
+		handBottom = CHOP.p1HandBottom;
+		upBtn = CHOP.p2UpBtn;
+		downBtn = CHOP.p2DownBtn;
+		applyBtn = CHOP.p2ApplyBtn;
+		cancelBtn = CHOP.p2CancelBtn;
 	}
 	else { 
 	
@@ -189,21 +205,25 @@ CHOP.prepareSplit = function() {
 		Number(handBottom.attr("points"))
 	];
 
-	// displays text areas to allow point adjustment
-// TODO switch from .html() to .attr()
-	handTop.html(
-		"<input id='split-area-top' type='text' size=1 value='" +
-		ptsOrig[0] + "'>");
-	handBottom.html(
-		"<input id='split-area-bottom' type='text' size=1 value='" +
-		ptsOrig[1] + "'>");
+	// show given players split buttons
+	$(CHOP.state == 2 ? ".split-btn.p1" : ".split-btn.p2").css("display", "unset");
+
+	//upBtn
+
+	//downBtn
 
 	// configures apply button
-	button
-		.css("display", "block")
+	applyBtn
 		.on("click", function() {
-			CHOP.applySplit(handTop, handBottom, ptsOrig, $(this));
+			CHOP.applySplit(handTop, handBottom, ptsOrig, true, applyBtn, cancelBtn);
 	});
+
+	// configures cancel button
+	cancelBtn
+		.on("click", function() {
+			CHOP.applySplit(handTop, handBottom, ptsOrig, false, applyBtn, cancelBtn);
+	});
+
 };
 
 
@@ -215,20 +235,10 @@ CHOP.prepareSplit = function() {
  * to the user's hand and split mode is exited. If not, the user's turn is
  * restarted.
 */
-CHOP.applySplit = function(handTop, handBottom, ptsOrig, button) {
+CHOP.applySplit = function(handTop, handBottom, ptsOrig, toBeApplied, applyBtn, cancelBtn) {
 
-	// backs up new points
-	var ptsNew = [
-		Number($("#split-area-top").attr("points")),
-		Number($("#split-area-bottom").attr("points"))
-	];
-
-	// if split is legal
-	if (CHOP.isLegalSplit(ptsOrig, ptsNew)) {
-
-		// applies new points
-		CHOP.updateHand(handTop, ptsNew[0]);
-		CHOP.updateHand(handBottom, ptsNew[1]);
+	// if user requests split to be applied
+	if (toBeApplied) {
 
 		// switches turn
 		CHOP.state = CHOP.state == 2 ? 3 : 0;
@@ -247,9 +257,9 @@ CHOP.applySplit = function(handTop, handBottom, ptsOrig, button) {
 	}
 
 	// exits split mode
-	button
-		.css("display", "none")
-		.off();
+	applyBtn.off();
+	cancelBtn.off();
+	$(".split-btn").css("display", "none");
 	CHOP.p1Hands.removeClass("selected");
 	CHOP.p2Hands.removeClass("selected");
 
