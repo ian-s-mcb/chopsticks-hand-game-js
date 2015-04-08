@@ -177,7 +177,11 @@ CHOP.prepareSplit = function() {
 		handBottom = CHOP.p2HandBottom;
 		button = $(".p2 .split-btn");
 	}
-	else { console.log("Error in split mode"); }
+	else { 
+	
+		console.log("Error in split mode");
+		return;
+	}
 
 	// backs up original points
 	var ptsOrig = [
