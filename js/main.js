@@ -86,9 +86,9 @@ CHOP.onHandClick = function() {
 
 			var attackingHand = CHOP.p1HandTop.hasClass("selected") ?
 				CHOP.p1HandTop : CHOP.p1HandBottom;
-			var attackAmount = Number(attackingHand.html());
+			var attackAmount = Number(attackingHand.attr("points"));
 
-			if ((attackAmount != 0) && (caller.html() != 0)) {
+			if ((attackAmount != 0) && (caller.attr("points") != 0)) {
 
 				attackingHand.removeClass("selected");
 				CHOP.attack(attackAmount, caller);
@@ -122,9 +122,9 @@ CHOP.onHandClick = function() {
 
 			var attackingHand = CHOP.p2HandTop.hasClass("selected") ?
 				CHOP.p2HandTop : CHOP.p2HandBottom;
-			var attackAmount = Number(attackingHand.html());
+			var attackAmount = Number(attackingHand.attr("points"));
 
-			if ((attackAmount != 0) && (caller.html() != 0)) {
+			if ((attackAmount != 0) && (caller.attr("points") != 0)) {
 
 				attackingHand.removeClass("selected");
 				CHOP.attack(attackAmount, caller);
@@ -181,11 +181,12 @@ CHOP.prepareSplit = function() {
 
 	// backs up original points
 	var ptsOrig = [
-		Number(handTop.html()),
-		Number(handBottom.html())
+		Number(handTop.attr("points")),
+		Number(handBottom.attr("points"))
 	];
 
 	// displays text areas to allow point adjustment
+// TODO switch from .html() to .attr()
 	handTop.html(
 		"<input id='split-area-top' type='text' size=1 value='" +
 		ptsOrig[0] + "'>");
@@ -214,16 +215,16 @@ CHOP.applySplit = function(handTop, handBottom, ptsOrig, button) {
 
 	// backs up new points
 	var ptsNew = [
-		Number($("#split-area-top").val()),
-		Number($("#split-area-bottom").val())
+		Number($("#split-area-top").attr("points")),
+		Number($("#split-area-bottom").attr("points"))
 	];
 
 	// if split is legal
 	if (CHOP.isLegalSplit(ptsOrig, ptsNew)) {
 
 		// applies new points
-		handTop.html(ptsNew[0]);
-		handBottom.html(ptsNew[1]);
+		CHOP.updateHand(handTop, ptsNew[0]);
+		CHOP.updateHand(handBottom, ptsNew[1]);
 
 		// switches turn
 		CHOP.state = CHOP.state == 2 ? 3 : 0;
@@ -234,8 +235,8 @@ CHOP.applySplit = function(handTop, handBottom, ptsOrig, button) {
 	else {
 
 		// restores original points
-		handTop.html(ptsOrig[0]);
-		handBottom.html(ptsOrig[1]);
+		CHOP.updateHand(handTop, ptsOrig[0]);
+		CHOP.updateHand(handBottom, ptsOrig[1]);
 
 		// retains turn
 		CHOP.state = CHOP.state == 2 ? 0 : 3;
@@ -253,6 +254,21 @@ CHOP.applySplit = function(handTop, handBottom, ptsOrig, button) {
 		"\nChanged state to: " + CHOP.state
 	);
 };
+
+
+
+//##################
+//#   updateHand   #
+//##################
+/**
+ * Updates hand by assigning the given points and swapping in the
+ * corresponding hand image.
+*/
+CHOP.updateHand = function(hand, points) {
+
+	hand.attr("points", points);
+	hand.attr("src", "media/number-sm-" + String(points) + ".png");
+}
 
 
 //####################
@@ -288,19 +304,19 @@ CHOP.attack = function(amount, target) {
 		" points"
 	);
 	
-	var targetValue = Number(target.html());
+	var targetValue = Number(target.attr("points"));
 
 	// deducts amount from target hand's value
 	if (targetValue + amount > 4)
-		target.html(0);
+		CHOP.updateHand(target, 0);
 	else
-		target.html(targetValue + amount);
+		CHOP.updateHand(target, targetValue + amount);
 
 	// changes state depending upon whether game over occured
 	// ### STATE 1 ###
 	if (CHOP.state == 1) {
 
-		if (CHOP.p2HandTop.html() == 0 && CHOP.p2HandBottom.html() == 0) {
+		if (CHOP.p2HandTop.attr("points") == 0 && CHOP.p2HandBottom.attr("points") == 0) {
 
 			console.log("Game Over p1 wins");
 
@@ -314,7 +330,7 @@ CHOP.attack = function(amount, target) {
 	// ### STATE 4 ###
 	else if (CHOP.state == 4) {
 
-		if (CHOP.p1HandTop.html() == 0 && CHOP.p1HandBottom.html() == 0) {
+		if (CHOP.p1HandTop.attr("points") == 0 && CHOP.p1HandBottom.attr("points") == 0) {
 
 			console.log("Game Over p2 wins");
 
