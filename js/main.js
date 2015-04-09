@@ -31,52 +31,17 @@ $(document).ready(function() {
 */
 CHOP.addBtnListeners = function() {
 
-	// adds click listeners to hands
-	CHOP.p1Hands.on("click", CHOP.onHandClick);
-	CHOP.p2Hands.on("click", CHOP.onHandClick);
-};
+	// hands
+	CHOP.p1Hands.click(CHOP.onHandClick);
+	CHOP.p2Hands.click(CHOP.onHandClick);
 
+	// cancel and apply
+	CHOP.cancelBtns.click(function() { CHOP.exitSplit(false); });
+	CHOP.applyBtns.click(function() { CHOP.exitSplit(true); });
 
-//##################
-//#   applySplit   #
-//##################
-/**
- * If the user-specified split is legal, then the new points are applied
- * to the user's hand and split mode is exited. If not, the user's turn is
- * restarted.
-*/
-CHOP.applySplit = function(handTop, handBottom, ptsOrig, toBeApplied, applyBtn, cancelBtn) {
-
-	// if user requests split to be applied
-	if (toBeApplied) {
-
-		// switches turn
-		CHOP.state = CHOP.state == 2 ? 3 : 0;
-		CHOP.switchTurnIndicator();
-	}
-
-	// otherwise, restarts turn
-	else {
-
-		// restores original points
-		CHOP.updateHand(handTop, ptsOrig[0]);
-		CHOP.updateHand(handBottom, ptsOrig[1]);
-
-		// retains turn
-		CHOP.state = CHOP.state == 2 ? 0 : 3;
-	}
-
-	// exits split mode
-	applyBtn.off();
-	cancelBtn.off();
-	$(".split-btn").css("display", "none");
-	CHOP.p1Hands.removeClass("selected");
-	CHOP.p2Hands.removeClass("selected");
-
-	console.log(
-		"Exiting split mode" +
-		"\nChanged state to: " + CHOP.state
-	);
+	// up and down
+	CHOP.downBtns.click(function() { CHOP.transferPoints(false); });
+	CHOP.upBtns.click(function() { CHOP.transferPoints(true); });
 };
 
 
@@ -133,6 +98,52 @@ CHOP.attack = function(amount, target) {
 };
 
 
+//#################
+//#   exitSplit   #
+//#################
+/**
+ * Exits split mode. If toBeApplied is true, then the split will be
+ * applied. Otherwise the split will be cancled and the current player's
+ * turn will be restarted.
+*/
+CHOP.exitSplit = function(toBeApplied) {
+
+	if (toBeApplied) {
+
+		CHOP.state = (CHOP.state == 2) ? 3 : 0;
+		CHOP.switchTurnIndicator();
+	}
+	else {
+
+		// ### STATE 2 ###
+		if (CHOP.state == 2) {
+
+			CHOP.updateHand(CHOP.p1HandTop, CHOP.backupPoints[0]);
+			CHOP.updateHand(CHOP.p1HandBottom, CHOP.backupPoints[1]);
+			CHOP.state = 0;
+		}
+		// ### STATE 5 ###
+		else if (CHOP.state == 5) {
+
+			CHOP.updateHand(CHOP.p2HandTop, CHOP.backupPoints[0]);
+			CHOP.updateHand(CHOP.p2HandBottom, CHOP.backupPoints[1]);
+			CHOP.state = 3;
+		}
+		else {
+
+			console.log("Unknown state encountered in transferPoints " +
+				"function");
+			return;
+		}
+	}
+
+	// clean up remains of the split mode
+	CHOP.p1Hands.removeClass("selected");
+	CHOP.p2Hands.removeClass("selected");
+	CHOP.splitBtns.css("display", "");
+}
+
+
 //################
 //#   gameOver   #
 //################
@@ -158,26 +169,23 @@ CHOP.createGlobalVars = function() {
 
 	CHOP.game = $(".game");
 	CHOP.state = 0;
+	CHOP.backupPoints = [null, null];
 
 	CHOP.p1Region = $(".region.p1");
 	CHOP.p1Hands = $(".hand.p1");
 	CHOP.p1HandTop = $(".p1.top");
 	CHOP.p1HandBottom = $(".p1.bottom");
 
-	CHOP.p1UpBtn = $(".split-btn.p1.up");
-	CHOP.p1DownBtn = $(".split-btn.p1.down");
-	CHOP.p1ApplyBtn = $(".split-btn.p1.apply");
-	CHOP.p1CancelBtn = $(".split-btn.p1.cancel");
-
 	CHOP.p2Region = $(".region.p2");
 	CHOP.p2Hands = $(".hand.p2");
 	CHOP.p2HandTop = $(".p2.top");
 	CHOP.p2HandBottom = $(".p2.bottom");
 
-	CHOP.p2UpBtn = $(".split-btn.p2.up");
-	CHOP.p2DownBtn = $(".split-btn.p2.down");
-	CHOP.p2ApplyBtn = $(".split-btn.p2.apply");
-	CHOP.p2CancelBtn = $(".split-btn.p2.cancel");
+	CHOP.splitBtns = $(".split-btn");
+	CHOP.upBtns = $(".split-btn.up");
+	CHOP.downBtns = $(".split-btn.down");
+	CHOP.applyBtns = $(".split-btn.apply");
+	CHOP.cancelBtns = $(".split-btn.cancel");
 }
 
 
@@ -199,7 +207,6 @@ CHOP.isLegalSplit = function(ptsOrig, ptsNew) {
 
 	return changed && fair && nonNeg;
 };
-
 
 //###################
 //#   onHandClick   #
@@ -243,7 +250,11 @@ CHOP.onHandClick = function() {
 
 			caller.addClass("selected");
 			CHOP.state = 2;
-			CHOP.prepareSplit();
+			CHOP.backupPoints = [
+				CHOP.p1HandTop.attr("points"),
+				CHOP.p1HandBottom.attr("points")
+			];
+			$(".split-btn.p1").css("display", "unset");
 		}
 		else if (playerNum == 2) {
 
@@ -279,7 +290,11 @@ CHOP.onHandClick = function() {
 
 			caller.addClass("selected");
 			CHOP.state = 5;
-			CHOP.prepareSplit();
+			CHOP.backupPoints = [
+				CHOP.p2HandTop.attr("points"),
+				CHOP.p2HandBottom.attr("points")
+			];
+			$(".split-btn.p2").css("display", "unset");
 		}
 		else if (playerNum == 1) {
 
@@ -300,72 +315,6 @@ CHOP.onHandClick = function() {
 };
 
 
-//####################
-//#   prepareSplit   #
-//####################
-/**
- * Displays split mode elements (text boxes and apply split button) and
- * passes split mode info to the applySplit method.
-*/
-CHOP.prepareSplit = function() {
-
-	console.log("Entering split mode");
-
-	// prepares variables so that this function is "player agnostic"
-	var handTop, handBottom, upBtn, downBtn, applyBtn, cancelBtn;
-	// ### STATE 2 ###
-	if (CHOP.state == 2) {
-
-		handTop = CHOP.p1HandTop;
-		handBottom = CHOP.p1HandBottom;
-		upBtn = CHOP.p1UpBtn;
-		downBtn = CHOP.p1DownBtn;
-		applyBtn = CHOP.p1ApplyBtn;
-		cancelBtn = CHOP.p1CancelBtn;
-	}
-	// ### STATE 5 ###
-	else if (CHOP.state == 5) {
-
-		handTop = CHOP.p2HandTop;
-		handBottom = CHOP.p2HandBottom;
-		upBtn = CHOP.p2UpBtn;
-		downBtn = CHOP.p2DownBtn;
-		applyBtn = CHOP.p2ApplyBtn;
-		cancelBtn = CHOP.p2CancelBtn;
-	}
-	else { 
-	
-		console.log("Error in split mode");
-		return;
-	}
-
-	// backs up original points
-	var ptsOrig = [
-		Number(handTop.attr("points")),
-		Number(handBottom.attr("points"))
-	];
-
-	// show given players split buttons
-	$(CHOP.state == 2 ? ".split-btn.p1" : ".split-btn.p2").css("display", "unset");
-
-	//upBtn
-
-	//downBtn
-
-	// configures apply button
-	applyBtn
-		.on("click", function() {
-			CHOP.applySplit(handTop, handBottom, ptsOrig, true, applyBtn, cancelBtn);
-	});
-
-	// configures cancel button
-	cancelBtn
-		.on("click", function() {
-			CHOP.applySplit(handTop, handBottom, ptsOrig, false, applyBtn, cancelBtn);
-	});
-};
-
-
 //############################
 //#   switchTurnIndictator   #
 //############################
@@ -377,6 +326,66 @@ CHOP.switchTurnIndicator = function() {
 	CHOP.p1Region.toggleClass("currentTurn");
 	CHOP.p2Region.toggleClass("currentTurn");
 };
+
+
+//######################
+//#   transferPoints   #
+//######################
+/**
+ * Transfers points between the current player's hands as part of split.
+ *
+ * If `upwards` is true, one points is transfer from the current player's
+ * bottom hand to their top hand. Otherwise, the point transfer is in the
+ * opposite direction.
+ *
+ * The point transfer is checked for legality before it is applied.
+*/
+CHOP.transferPoints = function(upwards) {
+
+	// identifies current players hands
+	var handTop, handBottom;
+	// ### STATE 2 ###
+	if (CHOP.state == 2) {
+
+		handTop = CHOP.p1HandTop;
+		handBottom = CHOP.p1HandBottom;
+	}
+	// ### STATE 5 ###
+	else if (CHOP.state == 5) {
+
+		handTop = CHOP.p2HandTop;
+		handBottom = CHOP.p2HandBottom;
+	}
+	else {
+
+		console.log("Unknown state encountered in transferPoints function");
+		return;
+	}
+
+	// identifies original and new points
+	var ptsOrig, ptsNew;
+	ptsOrig = [
+		Number(handTop.attr("points")),
+		Number(handBottom.attr("points")),
+	];
+	if (upwards)
+		ptsNew = [
+			ptsOrig[0] + 1,
+			ptsOrig[1] - 1
+		];
+	else
+		ptsNew = [
+			ptsOrig[0] - 1,
+			ptsOrig[1] + 1
+		];
+
+	// displays new points (if they're legal)
+	if (CHOP.isLegalSplit(ptsOrig, ptsNew)) {
+
+		CHOP.updateHand(handTop, ptsNew[0]);
+		CHOP.updateHand(handBottom, ptsNew[1]);
+	}
+}
 
 
 //##################
