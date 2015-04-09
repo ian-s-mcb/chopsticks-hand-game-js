@@ -196,7 +196,8 @@ CHOP.createGlobalVars = function() {
  * Checks the legality of a given split, and returns true if:
  *		- points are changed, and
  *		- point change is fair, and
- *		- new points are non-negative,
+ *		- new points are non-negative, and
+ *		- new points are not too big,
  * otherwise returns false.
 */
 CHOP.isLegalSplit = function(ptsOrig, ptsNew) {
@@ -204,8 +205,9 @@ CHOP.isLegalSplit = function(ptsOrig, ptsNew) {
 	var changed = (ptsOrig[0] != ptsNew[0]) && (ptsOrig[1] != ptsNew[1]);
 	var fair = (ptsOrig[0] - ptsNew[0]) == -1 * (ptsOrig[1] - ptsNew[1]);
 	var nonNeg = (ptsNew[0] >= 0) && (ptsNew[1] >= 0);
+	var notTooBig = (ptsNew[0] < 5) && (ptsNew[1] < 5);
 
-	return changed && fair && nonNeg;
+	return changed && fair && nonNeg && notTooBig;
 };
 
 //###################
