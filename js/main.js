@@ -105,16 +105,19 @@ CHOP.attack = function(amount, target) {
 //#################
 /**
  * Exits split mode. If toBeApplied is true, then the split will be
- * applied. Otherwise the split will be cancled and the current player's
+ * applied. Otherwise the split will be cancelled and the current player's
  * turn will be restarted.
 */
 CHOP.exitSplit = function(toBeApplied) {
 
+	// apply split
 	if (toBeApplied) {
 
 		CHOP.state = (CHOP.state == 2) ? 3 : 0;
 		CHOP.switchTurnIndicator();
 	}
+
+	// cancel split by restoring backed up points
 	else {
 
 		// ### STATE 2 ###
