@@ -70,7 +70,8 @@ CHOP.attack = function(amount, target) {
 	// ### STATE 1 ###
 	if (CHOP.state == 1) {
 
-		if (CHOP.p2HandTop.attr("points") == 0 && CHOP.p2HandBottom.attr("points") == 0) {
+		if (CHOP.p2HandTop.attr("points") == 0 &&
+			CHOP.p2HandBottom.attr("points") == 0) {
 
 			console.log("Game Over p1 wins");
 
@@ -84,7 +85,8 @@ CHOP.attack = function(amount, target) {
 	// ### STATE 4 ###
 	else if (CHOP.state == 4) {
 
-		if (CHOP.p1HandTop.attr("points") == 0 && CHOP.p1HandBottom.attr("points") == 0) {
+		if (CHOP.p1HandTop.attr("points") == 0 &&
+			CHOP.p1HandBottom.attr("points") == 0) {
 
 			console.log("Game Over p2 wins");
 
@@ -230,7 +232,8 @@ CHOP.onHandClick = function() {
 	console.log(
 		"Current state: " + CHOP.state +
 		"\nClicked hand belonging to player #: " + playerNum +
-		"\nThis hand was previously " + (isSelected ? "selected" : "unselected")
+		"\nThis hand was previously " +
+		(isSelected ? "selected" : "unselected")
 		);
 
 	// ### STATE 0 ###
