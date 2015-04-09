@@ -13,39 +13,28 @@ $(document).ready(function() {
 
 	"use strict";
 
-	// creates global variables
-	CHOP.game = $(".game");
-	CHOP.state = 0;
-
-	CHOP.p1Region = $(".region.p1");
-	CHOP.p1Hands = $(".hand.p1");
-	CHOP.p1HandTop = $(".p1.top");
-	CHOP.p1HandBottom = $(".p1.bottom");
-
-	CHOP.p1UpBtn = $(".split-btn.p1.up");
-	CHOP.p1DownBtn = $(".split-btn.p1.down");
-	CHOP.p1ApplyBtn = $(".split-btn.p1.apply");
-	CHOP.p1CancelBtn = $(".split-btn.p1.cancel");
-
-	CHOP.p2Region = $(".region.p2");
-	CHOP.p2Hands = $(".hand.p2");
-	CHOP.p2HandTop = $(".p2.top");
-	CHOP.p2HandBottom = $(".p2.bottom");
-
-	CHOP.p2UpBtn = $(".split-btn.p2.up");
-	CHOP.p2DownBtn = $(".split-btn.p2.down");
-	CHOP.p2ApplyBtn = $(".split-btn.p2.apply");
-	CHOP.p2CancelBtn = $(".split-btn.p2.cancel");
-
-	// adds click listeners to hands
-	CHOP.p1Hands.on("click", CHOP.onHandClick);
-	CHOP.p2Hands.on("click", CHOP.onHandClick);
+	CHOP.createGlobalVars();
+	CHOP.addBtnListeners();
 
 	// indicates player-1's turn
 	CHOP.p1Region.addClass("currentTurn");
 
 	console.log("jQuery works");
 });
+
+
+//#######################
+//#   addBtnListeners   #
+//#######################
+/**
+ * Adds listener functions to all game buttons
+*/
+CHOP.addBtnListeners = function() {
+
+	// adds click listeners to hands
+	CHOP.p1Hands.on("click", CHOP.onHandClick);
+	CHOP.p2Hands.on("click", CHOP.onHandClick);
+};
 
 
 //##################
@@ -157,6 +146,39 @@ CHOP.gameOver = function(playerNumber) {
 		.html("Game Over</br>Player " + playerNumber + " Wins")
 		.addClass("gameOver");
 };
+
+
+//########################
+//#   createGlobalVars   #
+//########################
+/**
+ * Creates variables in global namespace
+*/
+CHOP.createGlobalVars = function() {
+
+	CHOP.game = $(".game");
+	CHOP.state = 0;
+
+	CHOP.p1Region = $(".region.p1");
+	CHOP.p1Hands = $(".hand.p1");
+	CHOP.p1HandTop = $(".p1.top");
+	CHOP.p1HandBottom = $(".p1.bottom");
+
+	CHOP.p1UpBtn = $(".split-btn.p1.up");
+	CHOP.p1DownBtn = $(".split-btn.p1.down");
+	CHOP.p1ApplyBtn = $(".split-btn.p1.apply");
+	CHOP.p1CancelBtn = $(".split-btn.p1.cancel");
+
+	CHOP.p2Region = $(".region.p2");
+	CHOP.p2Hands = $(".hand.p2");
+	CHOP.p2HandTop = $(".p2.top");
+	CHOP.p2HandBottom = $(".p2.bottom");
+
+	CHOP.p2UpBtn = $(".split-btn.p2.up");
+	CHOP.p2DownBtn = $(".split-btn.p2.down");
+	CHOP.p2ApplyBtn = $(".split-btn.p2.apply");
+	CHOP.p2CancelBtn = $(".split-btn.p2.cancel");
+}
 
 
 //####################
@@ -368,3 +390,4 @@ CHOP.updateHand = function(hand, points) {
 
 	hand.attr("points", points);
 	hand.attr("src", "media/number-sm-" + String(points) + ".png");
+};
