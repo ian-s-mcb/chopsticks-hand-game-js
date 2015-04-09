@@ -186,8 +186,8 @@ CHOP.prepareSplit = function() {
 	// ### STATE 5 ###
 	else if (CHOP.state == 5) {
 
-		handTop = CHOP.p1HandTop;
-		handBottom = CHOP.p1HandBottom;
+		handTop = CHOP.p2HandTop;
+		handBottom = CHOP.p2HandBottom;
 		upBtn = CHOP.p2UpBtn;
 		downBtn = CHOP.p2DownBtn;
 		applyBtn = CHOP.p2ApplyBtn;
