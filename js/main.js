@@ -406,5 +406,5 @@ CHOP.transferPoints = function(upwards) {
 CHOP.updateHand = function(hand, points) {
 
 	hand.attr("points", points);
-	hand.attr("src", "media/number-sm-" + String(points) + ".png");
+	hand.attr("src", "media/points-" + String(points) + ".svg");
 };

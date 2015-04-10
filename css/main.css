@@ -14,11 +14,21 @@
 .hand {
 	display: block;
 	margin: 0 auto;
+	width: 75px;
 	text-align: center;
 	border: 1px solid transparent;
 }
 .hand:hover {
 	cursor: pointer;
+}
+.hand.p1.top {
+	transform: scaleY(-1);
+}
+.hand.p2.top {
+	transform: rotate(180deg);
+}
+.hand.p2.bottom {
+	transform: scaleY(-1) rotate(180deg);
 }
 .selected {
 	background-color: #eee;
