@@ -1,3 +1,6 @@
+.preload {
+	display: none;
+}
 .game {
 	width: 450px;
 	margin: 15px auto;
@@ -14,7 +17,8 @@
 .hand {
 	display: block;
 	margin: 0 auto;
-	width: 75px;
+	width: 134px;
+	height: 90px;
 	text-align: center;
 	border: 1px solid transparent;
 }
