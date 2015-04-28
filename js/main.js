@@ -62,9 +62,9 @@ CHOP.attack = function(amount, target) {
 
 	// deducts amount from target hand's value
 	if (targetValue + amount > 4)
-		CHOP.updateHand(target, 0);
+		CHOP.updateHand(target, 0, false);
 	else
-		CHOP.updateHand(target, targetValue + amount);
+		CHOP.updateHand(target, targetValue + amount, false);
 
 	// changes state depending upon whether game over occured
 	// ### STATE 1 ###
@@ -123,15 +123,15 @@ CHOP.exitSplit = function(toBeApplied) {
 		// ### STATE 2 ###
 		if (CHOP.state == 2) {
 
-			CHOP.updateHand(CHOP.p1HandTop, CHOP.backupPoints[0]);
-			CHOP.updateHand(CHOP.p1HandBottom, CHOP.backupPoints[1]);
+			CHOP.updateHand(CHOP.p1HandTop, CHOP.backupPoints[0], true);
+			CHOP.updateHand(CHOP.p1HandBottom, CHOP.backupPoints[1], true);
 			CHOP.state = 0;
 		}
 		// ### STATE 5 ###
 		else if (CHOP.state == 5) {
 
-			CHOP.updateHand(CHOP.p2HandTop, CHOP.backupPoints[0]);
-			CHOP.updateHand(CHOP.p2HandBottom, CHOP.backupPoints[1]);
+			CHOP.updateHand(CHOP.p2HandTop, CHOP.backupPoints[0], true);
+			CHOP.updateHand(CHOP.p2HandBottom, CHOP.backupPoints[1], true);
 			CHOP.state = 3;
 		}
 		else {
@@ -143,8 +143,10 @@ CHOP.exitSplit = function(toBeApplied) {
 	}
 
 	// clean up remains of the split mode
-	CHOP.p1Hands.removeClass("selected");
-	CHOP.p2Hands.removeClass("selected");
+	CHOP.unselectHand(CHOP.p1HandTop);
+	CHOP.unselectHand(CHOP.p1HandBottom);
+	CHOP.unselectHand(CHOP.p2HandTop);
+	CHOP.unselectHand(CHOP.p2HandBottom);
 	CHOP.splitBtns.css("display", "");
 }
 
@@ -242,7 +244,7 @@ CHOP.onHandClick = function() {
 	// ### STATE 0 ###
 	if (CHOP.state == 0 && playerNum == 1) {
 
-		caller.addClass("selected");
+		CHOP.selectHand(caller);
 		CHOP.state = 1;
 	}
 
@@ -251,12 +253,12 @@ CHOP.onHandClick = function() {
 
 		if (playerNum == 1 && isSelected) {
 
-			caller.removeClass("selected");
+			CHOP.unselectHand(caller);
 			CHOP.state = 0;
 		}
 		else if (playerNum == 1 && !isSelected) {
 
-			caller.addClass("selected");
+			CHOP.selectHand(caller);
 			CHOP.state = 2;
 			CHOP.backupPoints = [
 				CHOP.p1HandTop.attr("points"),
@@ -272,7 +274,7 @@ CHOP.onHandClick = function() {
 
 			if ((attackAmount != 0) && (caller.attr("points") != 0)) {
 
-				attackingHand.removeClass("selected");
+				CHOP.unselectHand(attackingHand);
 				CHOP.attack(attackAmount, caller);
 				CHOP.switchTurnIndicator();
 			}
@@ -282,7 +284,7 @@ CHOP.onHandClick = function() {
 	// ### STATE 3 ###
 	else if (CHOP.state == 3 && playerNum == 2) {
 
-		caller.addClass("selected");
+		CHOP.selectHand(caller);
 		CHOP.state = 4;
 	}
 
@@ -291,12 +293,12 @@ CHOP.onHandClick = function() {
 
 		if (playerNum == 2 && isSelected) {	
 
-			caller.removeClass("selected");
+			CHOP.unselectHand(caller);
 			CHOP.state = 3;
 		}
 		else if (playerNum == 2 && !isSelected) {
 
-			caller.addClass("selected");
+			CHOP.selectHand(caller);
 			CHOP.state = 5;
 			CHOP.backupPoints = [
 				CHOP.p2HandTop.attr("points"),
@@ -312,7 +314,7 @@ CHOP.onHandClick = function() {
 
 			if ((attackAmount != 0) && (caller.attr("points") != 0)) {
 
-				attackingHand.removeClass("selected");
+				CHOP.unselectHand(attackingHand);
 				CHOP.attack(attackAmount, caller);
 				CHOP.switchTurnIndicator();
 			}
@@ -320,6 +322,24 @@ CHOP.onHandClick = function() {
 	}
 
 	console.log("Changed state to: " + CHOP.state);
+};
+
+
+//##################
+//#   selectHand   #
+//##################
+/**
+ * Marks a given hand as selected by changing the filepath of its image
+ * tag. No changes are made if the given hand is already selected.
+*/
+CHOP.selectHand = function(hand) {
+
+	var old = hand.attr("src");
+	if (old.contains("un")) {
+
+		hand.addClass("selected");
+		hand.attr("src", old.replace("un", ""));
+	}
 };
 
 
@@ -390,10 +410,28 @@ CHOP.transferPoints = function(upwards) {
 	// displays new points (if they're legal)
 	if (CHOP.isLegalSplit(ptsOrig, ptsNew)) {
 
-		CHOP.updateHand(handTop, ptsNew[0]);
-		CHOP.updateHand(handBottom, ptsNew[1]);
+		CHOP.updateHand(handTop, ptsNew[0], true);
+		CHOP.updateHand(handBottom, ptsNew[1], true);
 	}
 }
+
+
+//####################
+//#   unselectHand   #
+//####################
+/**
+ * Marks a given hand as unselected by changing the filepath of its image
+ * tag. No changes are made if the given hand is already unselected.
+*/
+CHOP.unselectHand = function(hand) {
+
+	var old = hand.attr("src");
+	if (!old.contains("un")) {
+
+		hand.removeClass("selected");
+		hand.attr("src", old.replace("selected", "unselected"));
+	}
+};
 
 
 //##################
@@ -403,8 +441,10 @@ CHOP.transferPoints = function(upwards) {
  * Updates hand by assigning the given points and swapping in the
  * corresponding hand image.
 */
-CHOP.updateHand = function(hand, points) {
+CHOP.updateHand = function(hand, points, isSelected) {
 
 	hand.attr("points", points);
-	hand.attr("src", "media/points-" + String(points) + ".svg");
+
+	hand.attr("src", "media/points-" + String(points) + "-" +
+		(isSelected ? "" : "un") + "selected.svg");
 };

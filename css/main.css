@@ -17,8 +17,8 @@
 .hand {
 	display: block;
 	margin: 0 auto;
-	width: 134px;
-	height: 90px;
+	width: 156px;
+	height: 112px;
 	text-align: center;
 	border: 1px solid transparent;
 }
@@ -33,10 +33,6 @@
 }
 .hand.p2.bottom {
 	transform: scaleY(-1) rotate(180deg);
-}
-.selected {
-	background-color: #eee;
-	border: 1px solid #000;
 }
 .currentTurn {
 	outline: 2px solid;
