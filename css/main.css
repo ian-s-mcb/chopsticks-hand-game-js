@@ -1,3 +1,6 @@
+.preload {
+	display: none;
+}
 .game {
 	width: 450px;
 	margin: 15px auto;
@@ -13,27 +16,38 @@
 }
 .hand {
 	display: block;
-	margin: 0 auto 15px auto;
+	margin: 0 auto;
+	width: 156px;
+	height: 112px;
 	text-align: center;
 	border: 1px solid transparent;
 }
 .hand:hover {
 	cursor: pointer;
 }
-.selected {
-	background-color: #eee;
-	border: 1px solid #000;
+.hand.p1.top {
+	transform: scaleY(-1);
+}
+.hand.p2.top {
+	transform: rotate(180deg);
+}
+.hand.p2.bottom {
+	transform: scaleY(-1) rotate(180deg);
 }
 .currentTurn {
 	outline: 2px solid;
 }
 .split-container {
 	height: 60px;
+	line-height: 60px;
+	text-align: center;
 }
 .split-btn {
 	display: none;
 	margin: 0 auto;
 	width: 75px;
+	height: 40px;
+	font-size: 18px;
 }
 .gameOver {
 	margin: 75px auto;
