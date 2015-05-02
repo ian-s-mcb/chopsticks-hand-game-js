@@ -264,7 +264,7 @@ CHOP.onHandClick = function() {
 				CHOP.p1HandTop.attr("points"),
 				CHOP.p1HandBottom.attr("points")
 			];
-			$(".split-btn.p1").css("display", "unset");
+			$(".split-btn.p1").css("display", "initial");
 		}
 		else if (playerNum == 2) {
 
@@ -304,7 +304,7 @@ CHOP.onHandClick = function() {
 				CHOP.p2HandTop.attr("points"),
 				CHOP.p2HandBottom.attr("points")
 			];
-			$(".split-btn.p2").css("display", "unset");
+			$(".split-btn.p2").css("display", "initial");
 		}
 		else if (playerNum == 1) {
 
@@ -335,7 +335,7 @@ CHOP.onHandClick = function() {
 CHOP.selectHand = function(hand) {
 
 	var old = hand.attr("src");
-	if (old.contains("un")) {
+	if (old.search("unselected") != -1) {
 
 		hand.addClass("selected");
 		hand.attr("src", old.replace("un", ""));
@@ -426,7 +426,7 @@ CHOP.transferPoints = function(upwards) {
 CHOP.unselectHand = function(hand) {
 
 	var old = hand.attr("src");
-	if (!old.contains("un")) {
+	if (old.search("unselected") == -1) {
 
 		hand.removeClass("selected");
 		hand.attr("src", old.replace("selected", "unselected"));
