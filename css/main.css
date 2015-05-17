@@ -5,7 +5,56 @@
 	width: 450px;
 	margin: 15px auto;
 }
+.logo {
+	display: block;
+	margin: 0 auto;
+}
+@font-face {
+	font-family: chinese;
+	src: url("../media/chinese_takeaway.ttf");
+}
+.logo-chopsticks {
+	color: #000;
+	stroke: #000;
+	stroke-linecap: round;
+	stroke-width: 7;
+	fill: none;
+}
+.logo-title {
+	font-size: 70px;
+	fill: #000;
+	stroke: #000;
+	font-family: chinese;
+	block-progression: tb;
+	text-indent: 0;
+	color: #000;
+	text-transform: none;
+	line-height: 125%;
+}
+.logo-subtitle {
+	fill: #000;
+	font-size: 50px;
+	font-family: Monospace;
+	text-align: center;
+	text-anchor: middle;
+	word-spacing: 0;
+	letter-spacing: 0;
+	line-height: 100%
+}
+.options {
+	display: inline-block;
+	margin: 10px 0 0 40%;
+	font-size: 17px;
+	line-height: normal;
+}
+.option:hover {
+	color: steelblue;
+	text-decoration: underline;
+	list-style: outside;
+	cursor: pointer;
+}
 .region {
+	display: none;
 	width: 50%;
 	float: left;
 }
