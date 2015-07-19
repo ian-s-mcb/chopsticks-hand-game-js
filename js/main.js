@@ -31,6 +31,13 @@ $(document).ready(function() {
 */
 CHOP.addBtnListeners = function() {
 
+	// start
+	CHOP.startBtn.click(function() {
+		CHOP.startScreen.fadeOut(300, function() {
+			CHOP.regions.fadeIn();
+		});
+	});
+
 	// hands
 	CHOP.p1Hands.click(CHOP.onHandClick);
 	CHOP.p2Hands.click(CHOP.onHandClick);
@@ -175,6 +182,10 @@ CHOP.gameOver = function(playerNumber) {
 CHOP.createGlobalVars = function() {
 
 	CHOP.game = $(".game");
+	CHOP.startScreen = $(".start-screen");
+	CHOP.startBtn = $(".option.start");
+	CHOP.regions = $(".region");
+
 	CHOP.state = 0;
 	CHOP.backupPoints = [null, null];
 
